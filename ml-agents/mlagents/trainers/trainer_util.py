@@ -10,7 +10,11 @@ from mlagents.trainers.ppo.trainer import PPOTrainer
 from mlagents.trainers.sac.trainer import SACTrainer
 from mlagents.trainers.ghost.trainer import GhostTrainer
 from mlagents.trainers.ghost.controller import GhostController
-from mlagents.trainers.settings import TrainerSettings, TrainerType
+from mlagents.trainers.settings import (
+    TrainerSettings,
+    TRAINER_TYPE_PPO,
+    TRAINER_TYPE_SAC,
+)
 
 
 logger = get_logger(__name__)
@@ -95,7 +99,7 @@ def initialize_trainer(
     trainer: Trainer = None  # type: ignore  # will be set to one of these, or raise
     trainer_type = trainer_settings.trainer_type
 
-    if trainer_type == TrainerType.PPO:
+    if trainer_type == TRAINER_TYPE_PPO:
         trainer = PPOTrainer(
             brain_name,
             min_lesson_length,
@@ -105,7 +109,7 @@ def initialize_trainer(
             seed,
             trainer_artifact_path,
         )
-    elif trainer_type == TrainerType.SAC:
+    elif trainer_type == TRAINER_TYPE_SAC:
         trainer = SACTrainer(
             brain_name,
             min_lesson_length,

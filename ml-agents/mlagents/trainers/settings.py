@@ -522,23 +522,20 @@ class SelfPlaySettings:
     initial_elo: float = 1200.0
 
 
-class TrainerType(Enum):
-    PPO: str = "ppo"
-    SAC: str = "sac"
+TRAINER_TYPE_PPO = "ppo"
+TRAINER_TYPE_SAC = "sac"
 
-    def to_settings(self) -> type:
-        _mapping = {TrainerType.PPO: PPOSettings, TrainerType.SAC: SACSettings}
-        return _mapping[self]
+_trainer_type_to_settings: Dict[str, type] = {"ppo": PPOSettings, "sac": SACSettings}
 
 
 @attr.s(auto_attribs=True)
 class TrainerSettings(ExportableSettings):
-    trainer_type: TrainerType = TrainerType.PPO
+    trainer_type: str = TRAINER_TYPE_PPO
     hyperparameters: HyperparamSettings = attr.ib()
 
     @hyperparameters.default
     def _set_default_hyperparameters(self):
-        return self.trainer_type.to_settings()()
+        return _trainer_type_to_settings[self.trainer_type]
 
     network_settings: NetworkSettings = attr.ib(factory=NetworkSettings)
     reward_signals: Dict[RewardSignalType, RewardSignalSettings] = attr.ib(
@@ -597,7 +594,7 @@ class TrainerSettings(ExportableSettings):
                     )
                 else:
                     d_copy[key] = strict_to_cls(
-                        d_copy[key], TrainerType(d_copy["trainer_type"]).to_settings()
+                        d_copy[key], _trainer_type_to_settings[d_copy["trainer_type"]]
                     )
             elif key == "max_steps":
                 d_copy[key] = int(float(val))
