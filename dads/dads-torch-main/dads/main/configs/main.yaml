@@ -1,0 +1,20 @@
+defaults:
+  - _self_
+  - planner: mppi
+  - train: off_policy
+  - eval: zero_shot
+  - wandb: sweep
+  - model: moe
+  - agent: sac
+  - overrides: dads_hc
+  - buffer: random_replay_buffer
+
+root_dir: "../experiments"
+mode: "eval_dads"  # others are train_sac, eval_dads
+device: "cpu"
+
+hydra:
+  run:
+    dir: ${root_dir}/${mode}/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  sweep:
+    dir: ${root_dir}/${mode}/${now:%Y-%m-%d}/${now:%H-%M-%S}

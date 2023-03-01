@@ -1,0 +1,8 @@
+name: "HalfCheetahSAC"
+
+state_dim: 18  # note: this includes coordinate dimensions, which are not present in default observations
+action_dim: 6
+num_coordinates: 1
+
+skill_dim: 0
+skill_continuous: False
